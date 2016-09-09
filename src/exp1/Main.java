@@ -72,9 +72,65 @@ class expression {
 		for (int i = 0; i < vn.size(); i++)
 			vn.elementAt(i).adjust();
 	}
-	void merge() {
+	void merge() 
+	{
+		Vector<Node> tmp = new Vector<Node>();
+		Node nd1;
+		Node nd2;
+		for (int i = 0; i < vn.size(); i++)
+		{
+			nd1 = vn.elementAt(i);
+			for (int j = i+1; j < vn.size(); j++)
+			{
+				nd2 = vn.elementAt(j);	
+				if (nd2.str.compareTo(nd1.str) == 0)
+				{
+					nd1.d += nd2.d;
+					nd2.d = 0;
+					vn.removeElementAt(j);
+					vn.add(j, nd2);
+				}
+			}
+			if (nd1.d != 0)
+				tmp.add(nd1);
+		}	
+		vn = tmp;
+		/*
+		int back = 0;
+		int next;
 		
+		while(back < len)
+		{
+			next = back+1;
+			while(next < len)
+			{
+				nd1=vn.elementAt(back);
+				nd2=vn.elementAt(next);
+				if(nd1.str != nd2.str)
+				{
+					next++;
+				}
+				else
+				{
+					nd1.d = nd1.d + nd2.d;
+					nd2.d = 0;
+					len--;
+				}
+			}
+			back++;
+		}
+		for(int i=0;i < back;i++)
+		{
+			if(vn.elementAt(i).d == 0)
+			{
+				vn.remove(i);
+			}
+		}
+		add
+		*/
 	}
+	
+	
 }
 
 public class Main {
@@ -96,8 +152,9 @@ public class Main {
 				ex.init(cmd);
 				ex.adjust();
 				ex.show();
+				ex.merge();
+				ex.show();
 			}
 		}
 	}
 }
-//gSFvxzvvfvfvxdv
