@@ -1,7 +1,10 @@
 package exp1;
 
+import java.util.*; 
 import java.util.Scanner;
 import java.util.Vector;
+
+
 
 // Node : 保存每一个项
 // Node.d 系数
@@ -14,6 +17,7 @@ class Node {
 		this.str = "";
 		d = 1;
 		String[] tmp = s.split("\\*");
+		//tmp[].charAt()是未知数前面的系数　
 		for (int i = 0; i < tmp.length; i++) {
 			if (tmp[i].charAt(0) <= '9' && tmp[i].charAt(0) >= '0') {
 				int t = 0;
@@ -74,6 +78,7 @@ class expression {
 	}
 	void merge() 
 	{
+		
 		Vector<Node> tmp = new Vector<Node>();
 		Node nd1;
 		Node nd2;
@@ -95,41 +100,16 @@ class expression {
 				tmp.add(nd1);
 		}	
 		vn = tmp;
-		/*
-		int back = 0;
-		int next;
 		
-		while(back < len)
-		{
-			next = back+1;
-			while(next < len)
-			{
-				nd1=vn.elementAt(back);
-				nd2=vn.elementAt(next);
-				if(nd1.str != nd2.str)
-				{
-					next++;
-				}
-				else
-				{
-					nd1.d = nd1.d + nd2.d;
-					nd2.d = 0;
-					len--;
-				}
-			}
-			back++;
-		}
-		for(int i=0;i < back;i++)
-		{
-			if(vn.elementAt(i).d == 0)
-			{
-				vn.remove(i);
-			}
-		}
-		add
-		*/
 	}
-	
+	void simplify()
+	{
+		Scanner sc = new Scanner(System.in);
+		//String sc = "!Simplify x=1,y=3";
+		sc = sc.substring(10);      
+		
+		
+	}
 	
 }
 
@@ -145,6 +125,7 @@ public class Main {
 
 			// get command
 			if (cmd.charAt(0) == '!') {
+				//!simplify simplify simplifyvar 1=num =num1... var n=num =numn
 				System.out.println("233");
 			}
 			// get expression
