@@ -12,12 +12,12 @@ class Node {
 	Node(String s) {
 		this.str = "";
 		d = 1;
+		System.out.println("["+s+"]");
 		if (s.charAt(0) == '-')
 		{
 			d = -1;
 			s = s.substring(1);
 		}
-			
 		String[] tmp = s.split("\\*");
 		//tmp[].charAt()是未知数前面的系数　
 		for (int i = 0; i < tmp.length; i++) {
@@ -120,14 +120,16 @@ class expression {
 
 	void init(String str) {
 		String tmp1 = "";
-		for(int i=0;i<tmp1.length();i++)
+		for(int i=0;i<str.length();i++)
 		{
 			if(str.charAt(i) == '-')
 				tmp1=tmp1 + "+" + str.charAt(i);
 			else
 				tmp1 = tmp1 + str.charAt(i);
 		}
+		str = tmp1;
 		vn = new Vector<Node>();
+		System.out.println(str);
 		String[] tmp = str.split("\\+");
 		for (int i = 0; i < tmp.length; i++) {
 			vn.add(new Node(tmp[i]));
@@ -136,7 +138,7 @@ class expression {
 
 	void show() {
 		for (int i = 0; i < vn.size(); i++) {
-			if (i != 0)
+			if (i != 0 && vn.elementAt(i).d >= 0)
 				System.out.print("+");
 			vn.elementAt(i).showNode1();
 		}
@@ -149,7 +151,6 @@ class expression {
 	}
 	void merge() 
 	{
-		
 		Vector<Node> tmp = new Vector<Node>();
 		Node nd1;
 		Node nd2;
@@ -191,14 +192,12 @@ class expression {
 		}
 		vn = tmp;
 	}
-	
 }
 
 public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner cin = new Scanner(System.in);
-
 		String cmd;
 		expression ex = new expression();
 		while (cin.hasNext()) {
