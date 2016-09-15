@@ -1,5 +1,7 @@
 package exp1;
-import java.util.*; 
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -9,24 +11,25 @@ import java.util.Vector;
 class Node {
 	String str;
 	int d;
+
 	Node(String s) {
 		this.str = "";
 		d = 1;
-		if (s.charAt(0) == '-')
-		{
+		if (s.charAt(0) == '-') {
 			d = -1;
 			s = s.substring(1);
 		}
 		String[] tmp = s.split("\\*");
-		//tmp[].charAt()是未知数前面的系数　
+		// tmp[].charAt()是未知数前面的系数　
 		for (int i = 0; i < tmp.length; i++) {
 			if (tmp[i].charAt(0) <= '9' && tmp[i].charAt(0) >= '0') {
-				d = d*Integer.valueOf(tmp[i]);
+				d = d * Integer.valueOf(tmp[i]);
 			} else {
 				str = str + tmp[i].charAt(0);
 			}
 		}
 	}
+
 	void adjust() {
 		int[] cnt = new int[26];
 		for (int i = 0; i < str.length(); i++) {
@@ -40,72 +43,65 @@ class Node {
 		}
 		str = tmp;
 	}
-	Node simplify(char ch, int dig)
-	{
+
+	Node simplify(char ch, int dig) {
 		String tmp = "";
-		for (int i = 0; i < str.length(); i++)
-		{
-			if (str.charAt(i) == ch) d = d*dig;
-			else tmp = tmp+str.charAt(i);
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == ch)
+				d = d * dig;
+			else
+				tmp = tmp + str.charAt(i);
 		}
 		str = tmp;
 		return this;
 	}
-	Node deri(char ch)
-	{
+
+	Node deri(char ch) {
 		String tmp = "";
-		int n=0;
-		for(int i = 0;i<str.length();i++)
-		{
-			if(str.charAt(i) != ch)
-			{
+		int n = 0;
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) != ch) {
 				tmp = tmp + str.charAt(i);
-			}
-			else
-			{
-				if(n > 0) 
-					tmp = tmp+str.charAt(i);
+			} else {
+				if (n > 0)
+					tmp = tmp + str.charAt(i);
 				n++;
 			}
 		}
-		d = n*d;
+		d = n * d;
 		str = tmp;
 		return this;
 	}
-	
+
 	void showNode() {
 		System.out.print(d);
 		for (int i = 0; i < str.length(); i++)
 			System.out.print("*" + str.charAt(i));
 	}
-	void showNode1()
-	{
-		//String tmp = "";
+
+	void showNode1() {
+		// String tmp = "";
 		System.out.print(d);
 		char pchar = '\0';
 		int cnt = 0;
-		for(int i=0;i<str.length();i++)
-		{
-			if (str.charAt(i) != pchar)
-			{
-				if (cnt == 1) System.out.print("*"+pchar);
-				else if (cnt > 1)
-				{
-					System.out.print("*"+pchar+"^"+cnt);
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) != pchar) {
+				if (cnt == 1)
+					System.out.print("*" + pchar);
+				else if (cnt > 1) {
+					System.out.print("*" + pchar + "^" + cnt);
 				}
 				pchar = str.charAt(i);
 				cnt = 1;
-			}
-			else
+			} else
 				cnt++;
 		}
-		if (cnt == 1) System.out.print("*"+pchar);
-		else if(cnt > 1)
-		{
-			System.out.print("*"+pchar+"^"+cnt);
+		if (cnt == 1)
+			System.out.print("*" + pchar);
+		else if (cnt > 1) {
+			System.out.print("*" + pchar + "^" + cnt);
 		}
 	}
-
 }
 
 class expression {
@@ -113,35 +109,29 @@ class expression {
 
 	void init(String str) {
 		String tmp1 = "";
-		for(int i=0;i<str.length();i++)
-		{
-			if(str.charAt(i) == '-')
-				tmp1=tmp1 + "+" + str.charAt(i);
-			else if(str.charAt(i) == '^')
-			{
+		for (int i = 0; i < str.length(); i++) {
+			if (str.charAt(i) == '-')
+				tmp1 = tmp1 + "+" + str.charAt(i);
+			else if (str.charAt(i) == '^') {
 				String dd = "";
-				for (int j = i+1; j < str.length(); j++)
-				{
+				for (int j = i + 1; j < str.length(); j++) {
 					char ch = str.charAt(j);
-					if (ch >= '0' && ch <= '9')
-					{
+					if (ch >= '0' && ch <= '9') {
 						dd = dd + ch;
 						i++;
-					}
-					else
+					} else
 						break;
 				}
 				int d = Integer.valueOf(dd);
-				char ch = tmp1.charAt(tmp1.length()-1);
+				char ch = tmp1.charAt(tmp1.length() - 1);
 				for (int j = 1; j < d; j++)
 					tmp1 = tmp1 + "*" + ch;
-			}
-			else
+			} else
 				tmp1 = tmp1 + str.charAt(i);
 		}
 		str = tmp1;
 		vn = new Vector<Node>();
-		System.out.println(str);
+		// System.out.println(str);
 		String[] tmp = str.split("\\+");
 		for (int i = 0; i < tmp.length; i++) {
 			vn.add(new Node(tmp[i]));
@@ -154,6 +144,9 @@ class expression {
 				System.out.print("+");
 			vn.elementAt(i).showNode1();
 		}
+		
+		if (vn.size() == 0)
+			System.out.print("0");
 		System.out.println();
 	}
 
@@ -161,19 +154,16 @@ class expression {
 		for (int i = 0; i < vn.size(); i++)
 			vn.elementAt(i).adjust();
 	}
-	void merge() 
-	{
+
+	void merge() {
 		Vector<Node> tmp = new Vector<Node>();
 		Node nd1;
 		Node nd2;
-		for (int i = 0; i < vn.size(); i++)
-		{
+		for (int i = 0; i < vn.size(); i++) {
 			nd1 = vn.elementAt(i);
-			for (int j = i+1; j < vn.size(); j++)
-			{
-				nd2 = vn.elementAt(j);	
-				if (nd2.str.compareTo(nd1.str) == 0)
-				{
+			for (int j = i + 1; j < vn.size(); j++) {
+				nd2 = vn.elementAt(j);
+				if (nd2.str.compareTo(nd1.str) == 0) {
 					nd1.d += nd2.d;
 					nd2.d = 0;
 					vn.removeElementAt(j);
@@ -182,23 +172,21 @@ class expression {
 			}
 			if (nd1.d != 0)
 				tmp.add(nd1);
-		}	
+		}
 		vn = tmp;
 	}
-	void simplify(char ch, int dig)
-	{	
+
+	void simplify(char ch, int dig) {
 		Vector<Node> tmp = new Vector<Node>(0);
-		for (int i = 0; i < vn.size(); i++)
-		{
+		for (int i = 0; i < vn.size(); i++) {
 			tmp.addElement(vn.elementAt(i).simplify(ch, dig));
 		}
 		vn = tmp;
 	}
-	void deri(char ch)
-	{
+
+	void deri(char ch) {
 		Vector<Node> tmp = new Vector<Node>(0);
-		for(int i=0;i<vn.size();i++)
-		{
+		for (int i = 0; i < vn.size(); i++) {
 			tmp.addElement(vn.elementAt(i).deri(ch));
 		}
 		vn = tmp;
@@ -206,9 +194,12 @@ class expression {
 }
 
 public class Main {
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		Scanner cin = new Scanner(System.in);
+	private static Scanner cin;
+
+	public static void main(String[] args) throws FileNotFoundException {
+		FileInputStream fis=new FileInputStream("in1.txt");  
+        System.setIn(fis);
+		cin = new Scanner(System.in);
 		String cmd;
 		expression ex = new expression();
 		while (cin.hasNext()) {
@@ -216,15 +207,11 @@ public class Main {
 			cmd = cmd.toLowerCase();
 			// get command
 			if (cmd.charAt(0) == '!') {
-				//!simplify simplify simplifyvar 1=num =num1... var n=num =numn
-				//System.out.println("233");
 				// simplify
-				if (cmd.charAt(1) == 's')
-				{
+				if (cmd.charAt(1) == 's') {
 					String[] tmp = cmd.split("\\s");
 					tmp = tmp[1].split(",");
-					for (int i = 0; i < tmp.length; i++)
-					{
+					for (int i = 0; i < tmp.length; i++) {
 						String[] tosimp = tmp[i].split("=");
 						char tmpchar = tosimp[0].charAt(0);
 						int dig = Integer.parseInt(tosimp[1]);
@@ -233,19 +220,18 @@ public class Main {
 					}
 				}
 				// d/dy
-				else
-				{
+				else {
 					char cmdchar = cmd.charAt(4);
 					ex.deri(cmdchar);
 					ex.merge();
-				}	
+				}
 				ex.show();
 			}
 			// get expression
 			else {
 				ex.init(cmd);
 				ex.adjust();
-				ex.show();
+//				ex.show();
 				ex.merge();
 				ex.show();
 			}

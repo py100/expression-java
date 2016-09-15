@@ -1,0 +1,5 @@
+x^2-x*x+x*y^2+2*x*y^2
+!d/dx
+!simplify y=5
+!d/dx
+!d/dx
