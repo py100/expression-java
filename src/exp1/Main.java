@@ -2,6 +2,7 @@ package exp1;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Vector;
 
@@ -11,7 +12,7 @@ import java.util.Vector;
 class Node {
 	String str;
 	int d;
-	
+
 	Node(String s) {
 		StringBuilder sb = new StringBuilder();
 		d = 1;
@@ -39,7 +40,7 @@ class Node {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 26; i++) {
 			for (int j = 0; j < cnt[i]; j++) {
-				sb.append((char)(i+'a'));
+				sb.append((char) (i + 'a'));
 			}
 		}
 		str = sb.toString();
@@ -79,12 +80,10 @@ class Node {
 		for (int i = 0; i < str.length(); i++)
 			System.out.print("*" + str.charAt(i));
 	}
-	
-	
-	//*TODO*
-	//change plain syso to String
+
+	// *TODO*
+	// change plain syso to String
 	void showNode1() {
-		// String tmp = "";
 		System.out.print(d);
 		char pchar = '\0';
 		int cnt = 0;
@@ -109,19 +108,16 @@ class Node {
 }
 
 class expression {
-	Vector<Node> vn;
+	ArrayList<Node> an;
+
 	void init(String str) {
 		StringBuilder sb = new StringBuilder();
-//		String tmp1 = "";
 		for (int i = 0; i < str.length(); i++) {
-			if (str.charAt(i) == '-')
-			{
+			if (str.charAt(i) == '-') {
 				sb.append('+');
 				sb.append(str.charAt(i));
-			}
-			else if (str.charAt(i) == '^') {
+			} else if (str.charAt(i) == '^') {
 				StringBuilder sbb = new StringBuilder();
-//				String dd = "";
 				for (int j = i + 1; j < str.length(); j++) {
 					char ch = str.charAt(j);
 					if (ch >= '0' && ch <= '9') {
@@ -132,8 +128,7 @@ class expression {
 				}
 				int d = Integer.valueOf(sbb.toString());
 				char ch = sb.charAt(sb.length() - 1);
-				for (int j = 1; j < d; j++)
-				{
+				for (int j = 1; j < d; j++) {
 					sb.append('*');
 					sb.append(ch);
 				}
@@ -141,65 +136,64 @@ class expression {
 				sb.append(str.charAt(i));
 		}
 		str = sb.toString();
-		vn = new Vector<Node>();
+		an = new ArrayList<Node>();
 		String[] tmp = str.split("\\+");
 		for (int i = 0; i < tmp.length; i++) {
-			vn.add(new Node(tmp[i]));
+			an.add(new Node(tmp[i]));
 		}
 	}
 
 	void show() {
-		for (int i = 0; i < vn.size(); i++) {
-			if (i != 0 && vn.elementAt(i).d >= 0)
+		for (int i = 0; i < an.size(); i++) {
+			if (i != 0 && an.get(i).d >= 0)
 				System.out.print("+");
-			vn.elementAt(i).showNode1();
+			an.get(i).showNode1();
 		}
-		
-		if (vn.size() == 0)
+
+		if (an.size() == 0)
 			System.out.print("0");
 		System.out.println();
 	}
 
 	void adjust() {
-		for (int i = 0; i < vn.size(); i++)
-			vn.elementAt(i).adjust();
+		for (int i = 0; i < an.size(); i++)
+			an.get(i).adjust();
 	}
 
 	void merge() {
-		Vector<Node> tmp = new Vector<Node>();
+		ArrayList<Node> atmp = new ArrayList<Node>();
 		Node nd1;
 		Node nd2;
-		for (int i = 0; i < vn.size(); i++) {
-			nd1 = vn.elementAt(i);
-			for (int j = i + 1; j < vn.size(); j++) {
-				nd2 = vn.elementAt(j);
+		for (int i = 0; i < an.size(); i++) {
+			nd1 = an.get(i);
+			for (int j = i + 1; j < an.size(); j++) {
+				nd2 = an.get(j);
 				if (nd2.str.compareTo(nd1.str) == 0) {
 					nd1.d += nd2.d;
 					nd2.d = 0;
-					vn.removeElementAt(j);
-					vn.add(j, nd2);
+					an.set(j, nd2);
 				}
 			}
 			if (nd1.d != 0)
-				tmp.add(nd1);
+				atmp.add(nd1);
 		}
-		vn = tmp;
+		an = atmp;
 	}
 
 	void simplify(char ch, int dig) {
-		Vector<Node> tmp = new Vector<Node>(0);
-		for (int i = 0; i < vn.size(); i++) {
-			tmp.addElement(vn.elementAt(i).simplify(ch, dig));
+		ArrayList<Node> tmp = new ArrayList<Node>();
+		for (int i = 0; i < an.size(); i++) {
+			tmp.add(an.get(i).simplify(ch, dig));
 		}
-		vn = tmp;
+		an = tmp;
 	}
 
 	void deri(char ch) {
-		Vector<Node> tmp = new Vector<Node>(0);
-		for (int i = 0; i < vn.size(); i++) {
-			tmp.addElement(vn.elementAt(i).deri(ch));
+		ArrayList<Node> tmp = new ArrayList<Node>();
+		for (int i = 0; i < an.size(); i++) {
+			tmp.add(an.get(i).deri(ch));
 		}
-		vn = tmp;
+		an = tmp;
 	}
 }
 
@@ -207,8 +201,8 @@ public class Main {
 	private static Scanner cin;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FileInputStream fis=new FileInputStream("in1.txt");  
-        System.setIn(fis);
+		FileInputStream fis = new FileInputStream("in1.txt");
+		System.setIn(fis);
 		cin = new Scanner(System.in);
 		String cmd;
 		expression ex = new expression();
@@ -241,7 +235,7 @@ public class Main {
 			else {
 				ex.init(cmd);
 				ex.adjust();
-//				ex.show();
+				// ex.show();
 				ex.merge();
 				ex.show();
 			}
