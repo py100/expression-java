@@ -236,5 +236,6 @@ public class Main {
 				ex.show();
 			}
 		}
+		System.exit(0);
 	}
 }
