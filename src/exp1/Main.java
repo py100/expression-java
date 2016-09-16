@@ -11,23 +11,24 @@ import java.util.Vector;
 class Node {
 	String str;
 	int d;
-
+	
 	Node(String s) {
-		this.str = "";
+		StringBuilder sb = new StringBuilder();
 		d = 1;
 		if (s.charAt(0) == '-') {
 			d = -1;
 			s = s.substring(1);
 		}
 		String[] tmp = s.split("\\*");
-		// tmp[].charAt()是未知数前面的系数　
+		// tmp[].charAt()是未知数前面的系数
 		for (int i = 0; i < tmp.length; i++) {
 			if (tmp[i].charAt(0) <= '9' && tmp[i].charAt(0) >= '0') {
 				d = d * Integer.valueOf(tmp[i]);
 			} else {
-				str = str + tmp[i].charAt(0);
+				sb.append(tmp[i].charAt(0));
 			}
 		}
+		this.str = sb.toString();
 	}
 
 	void adjust() {
@@ -35,41 +36,41 @@ class Node {
 		for (int i = 0; i < str.length(); i++) {
 			cnt[str.charAt(i) - 'a']++;
 		}
-		String tmp = "";
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < 26; i++) {
 			for (int j = 0; j < cnt[i]; j++) {
-				tmp = tmp + (char) (i + 'a');
+				sb.append((char)(i+'a'));
 			}
 		}
-		str = tmp;
+		str = sb.toString();
 	}
 
 	Node simplify(char ch, int dig) {
-		String tmp = "";
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == ch)
 				d = d * dig;
 			else
-				tmp = tmp + str.charAt(i);
+				sb.append(str.charAt(i));
 		}
-		str = tmp;
+		str = sb.toString();
 		return this;
 	}
 
 	Node deri(char ch) {
-		String tmp = "";
+		StringBuilder sb = new StringBuilder();
 		int n = 0;
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) != ch) {
-				tmp = tmp + str.charAt(i);
+				sb.append(str.charAt(i));
 			} else {
 				if (n > 0)
-					tmp = tmp + str.charAt(i);
+					sb.append(str.charAt(i));
 				n++;
 			}
 		}
 		d = n * d;
-		str = tmp;
+		str = sb.toString();
 		return this;
 	}
 
@@ -78,7 +79,10 @@ class Node {
 		for (int i = 0; i < str.length(); i++)
 			System.out.print("*" + str.charAt(i));
 	}
-
+	
+	
+	//*TODO*
+	//change plain syso to String
 	void showNode1() {
 		// String tmp = "";
 		System.out.print(d);
@@ -106,32 +110,38 @@ class Node {
 
 class expression {
 	Vector<Node> vn;
-
 	void init(String str) {
-		String tmp1 = "";
+		StringBuilder sb = new StringBuilder();
+//		String tmp1 = "";
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == '-')
-				tmp1 = tmp1 + "+" + str.charAt(i);
+			{
+				sb.append('+');
+				sb.append(str.charAt(i));
+			}
 			else if (str.charAt(i) == '^') {
-				String dd = "";
+				StringBuilder sbb = new StringBuilder();
+//				String dd = "";
 				for (int j = i + 1; j < str.length(); j++) {
 					char ch = str.charAt(j);
 					if (ch >= '0' && ch <= '9') {
-						dd = dd + ch;
+						sbb.append(ch);
 						i++;
 					} else
 						break;
 				}
-				int d = Integer.valueOf(dd);
-				char ch = tmp1.charAt(tmp1.length() - 1);
+				int d = Integer.valueOf(sbb.toString());
+				char ch = sb.charAt(sb.length() - 1);
 				for (int j = 1; j < d; j++)
-					tmp1 = tmp1 + "*" + ch;
+				{
+					sb.append('*');
+					sb.append(ch);
+				}
 			} else
-				tmp1 = tmp1 + str.charAt(i);
+				sb.append(str.charAt(i));
 		}
-		str = tmp1;
+		str = sb.toString();
 		vn = new Vector<Node>();
-		// System.out.println(str);
 		String[] tmp = str.split("\\+");
 		for (int i = 0; i < tmp.length; i++) {
 			vn.add(new Node(tmp[i]));
