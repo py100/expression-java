@@ -109,7 +109,9 @@ class expression {
 
 	void init(String str) {
 		String tmp1 = "";
-		for (int i = 0; i < str.length(); i++) {
+		
+		for(int i = 0; i < str.length(); i++)
+		{
 			if (str.charAt(i) == '-')
 				tmp1 = tmp1 + "+" + str.charAt(i);
 			else if (str.charAt(i) == '^') {
@@ -129,6 +131,7 @@ class expression {
 			} else
 				tmp1 = tmp1 + str.charAt(i);
 		}
+		
 		str = tmp1;
 		vn = new Vector<Node>();
 		// System.out.println(str);
@@ -197,7 +200,7 @@ public class Main {
 	private static Scanner cin;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FileInputStream fis=new FileInputStream("in1.txt");  
+		FileInputStream fis=new FileInputStream("in18.txt");  
         System.setIn(fis);
 		cin = new Scanner(System.in);
 		String cmd;
@@ -229,6 +232,15 @@ public class Main {
 			}
 			// get expression
 			else {
+				for (int i = 0; i < cmd.length(); i++) 
+				{
+					if(cmd.charAt(i) == '/')
+					{
+						System.out.println("Error!");
+						System.exit(0);
+					}
+					
+				}
 				ex.init(cmd);
 				ex.adjust();
 //				ex.show();
