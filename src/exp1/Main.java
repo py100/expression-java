@@ -233,6 +233,15 @@ public class Main {
 			}
 			// get expression
 			else {
+				for (int i = 0; i < cmd.length(); i++) 
+				{
+					if(cmd.charAt(i) == '/')
+					{
+						System.out.println("Error!");
+						System.exit(0);
+					}
+					
+				}
 				ex.init(cmd);
 				ex.adjust();
 				// ex.show();
@@ -240,5 +249,6 @@ public class Main {
 				ex.show();
 			}
 		}
+		System.exit(0);
 	}
 }
