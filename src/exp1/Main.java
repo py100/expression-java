@@ -109,8 +109,53 @@ class Node {
 
 class expression {
 	ArrayList<Node> an;
-
-	void init(String str) {
+	
+	boolean isch(char ch) {
+		return ch >= 'a' && ch <= 'z';
+	}
+	boolean isdig(char ch) {
+		return ch >= '0' && ch <= '9';
+	}
+	boolean init(String str) {
+		str = str.replace(" ", "");
+		// empty string
+		if (str.length() < 1) return false;
+		
+		for (int i = 0; i < str.length(); i++) {
+			//System.out.println(i+"  "+str.charAt(i));
+			if (str.charAt(i) == '^') {
+				if (i == 0) return false;
+				if (!isch(str.charAt(i-1))) return false;
+				if (i + 1 >= str.length()) return false;
+				if (!isdig(str.charAt(i+1))) return false;
+			}
+			else if (str.charAt(i) == '+' || str.charAt(i) == '-') {
+				if (i-1 >= 0 && !isch(str.charAt(i-1)) && !isdig(str.charAt(i-1))) return false;
+				if (i+1 >= str.length()) return false;
+				if (!isch(str.charAt(i+1)) && !isdig(str.charAt(i+1))) return false;
+			}
+			else if (str.charAt(i) == '*') {
+				if (i-1 < 0 || i+1 >= str.length()) return false;
+				if (!isch(str.charAt(i-1)) && !isdig(str.charAt(i-1))) return false;
+				if (!isch(str.charAt(i+1)) && !isdig(str.charAt(i+1))) return false;
+			}
+			else if (isch(str.charAt(i))) {
+				if (i-1>=0) {
+					char ch = str.charAt(i-1);
+					if (ch != '+' && ch != '-' && ch != '*' && ch != '^') return false;
+				}
+				if (i+1<str.length()) {
+					char ch = str.charAt(i+1);
+					if (ch != '+' && ch != '-' && ch != '*' && ch != '^') return false;
+				}
+			}
+			else if (isdig(str.charAt(i))) {
+				if (i-1>=0 && isch(str.charAt(i-1))) return false;
+			}
+			else return false;
+		}
+		
+		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == '-') {
@@ -141,6 +186,7 @@ class expression {
 		for (int i = 0; i < tmp.length; i++) {
 			an.add(new Node(tmp[i]));
 		}
+		return true;
 	}
 
 	void show() {
@@ -201,7 +247,7 @@ public class Main {
 	private static Scanner cin;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FileInputStream fis = new FileInputStream("in1.txt");
+		FileInputStream fis = new FileInputStream("in19.txt");
 		System.setIn(fis);
 		cin = new Scanner(System.in);
 		String cmd;
@@ -233,16 +279,19 @@ public class Main {
 			}
 			// get expression
 			else {
-				for (int i = 0; i < cmd.length(); i++) 
-				{
-					if(cmd.charAt(i) == '/')
-					{
+				/*
+				for (int i = 0; i < cmd.length(); i++) {
+					if (cmd.charAt(i) == '/') {
 						System.out.println("Error!");
 						System.exit(0);
 					}
-					
 				}
-				ex.init(cmd);
+				*/
+				if (!ex.init(cmd)) {
+					System.out.println("Input Error!!");
+					System.exit(0);
+					//continue;
+				}
 				ex.adjust();
 				// ex.show();
 				ex.merge();
