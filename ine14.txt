@@ -1,0 +1,2 @@
+4*x^4+3*x*y+8*z
+?simplify x=1
