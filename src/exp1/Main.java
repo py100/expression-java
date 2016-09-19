@@ -109,8 +109,53 @@ class Node {
 
 class expression {
 	ArrayList<Node> an;
-
-	void init(String str) {
+	
+	boolean isch(char ch) {
+		return ch >= 'a' && ch <= 'z';
+	}
+	boolean isdig(char ch) {
+		return ch >= '0' && ch <= '9';
+	}
+	boolean init(String str) {
+		str = str.replace(" ", "");
+		// empty string
+		if (str.length() < 1) return false;
+		
+		for (int i = 0; i < str.length(); i++) {
+			//System.out.println(i+"  "+str.charAt(i));
+			if (str.charAt(i) == '^') {
+				if (i == 0) return false;
+				if (!isch(str.charAt(i-1))) return false;
+				if (i + 1 >= str.length()) return false;
+				if (!isdig(str.charAt(i+1))) return false;
+			}
+			else if (str.charAt(i) == '+' || str.charAt(i) == '-') {
+				if (i-1 >= 0 && !isch(str.charAt(i-1)) && !isdig(str.charAt(i-1))) return false;
+				if (i+1 >= str.length()) return false;
+				if (!isch(str.charAt(i+1)) && !isdig(str.charAt(i+1))) return false;
+			}
+			else if (str.charAt(i) == '*') {
+				if (i-1 < 0 || i+1 >= str.length()) return false;
+				if (!isch(str.charAt(i-1)) && !isdig(str.charAt(i-1))) return false;
+				if (!isch(str.charAt(i+1)) && !isdig(str.charAt(i+1))) return false;
+			}
+			else if (isch(str.charAt(i))) {
+				if (i-1>=0) {
+					char ch = str.charAt(i-1);
+					if (ch != '+' && ch != '-' && ch != '*' && ch != '^') return false;
+				}
+				if (i+1<str.length()) {
+					char ch = str.charAt(i+1);
+					if (ch != '+' && ch != '-' && ch != '*' && ch != '^') return false;
+				}
+			}
+			else if (isdig(str.charAt(i))) {
+				if (i-1>=0 && isch(str.charAt(i-1))) return false;
+			}
+			else return false;
+		}
+		
+		
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < str.length(); i++) {
 			if (str.charAt(i) == '-') {
@@ -141,6 +186,7 @@ class expression {
 		for (int i = 0; i < tmp.length; i++) {
 			an.add(new Node(tmp[i]));
 		}
+		return true;
 	}
 
 	void show() {
@@ -201,7 +247,7 @@ public class Main {
 	private static Scanner cin;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FileInputStream fis = new FileInputStream("in1.txt");
+		FileInputStream fis = new FileInputStream("in19.txt");
 		System.setIn(fis);
 		cin = new Scanner(System.in);
 		String cmd;
@@ -209,40 +255,65 @@ public class Main {
 		while (cin.hasNext()) {
 			cmd = cin.nextLine();
 			cmd = cmd.toLowerCase();
+			//System.out.println(cmd);
 			// get command
 			if (cmd.charAt(0) == '!') {
 				// simplify
 				if (cmd.charAt(1) == 's') {
 					String[] tmp = cmd.split("\\s");
+					
+					if (!tmp[0].equals("!simplify")) {
+						System.out.println("Input Error!!\nNo such operation!!");
+						System.exit(0);
+//						continue;
+					}
 					tmp = tmp[1].split(",");
 					for (int i = 0; i < tmp.length; i++) {
+						tmp[i] = tmp[i].replace(" ", "");
 						String[] tosimp = tmp[i].split("=");
+						if (tosimp.length != 2 || tosimp[0].length() != 1 || (!(tosimp[0].charAt(0) >= 'a' && tosimp[0].charAt(0)<='z'))) {
+							System.out.println("Input Error!!\nNo such operation!!");
+							System.exit(0);
+						}
 						char tmpchar = tosimp[0].charAt(0);
-						int dig = Integer.parseInt(tosimp[1]);
+						int dig = 1;
+						try
+						{
+							dig = Integer.parseInt(tosimp[1]);
+						}catch(Exception e){
+							System.out.println("Input Error");
+							System.exit(0);
+						}
 						ex.simplify(tmpchar, dig);
 						ex.merge();
 					}
 				}
 				// d/dy
-				else {
+				else if (cmd.charAt(1) == 'd') {
+					if (cmd.length() != 5 || !cmd.substring(1, 4).equals("d/d")) {
+						System.out.println("Input Error!!\nNo such operation!!");
+						System.exit(0);
+					}
 					char cmdchar = cmd.charAt(4);
+					if (!(cmdchar >= 'a' && cmdchar <= 'z')) {
+						System.out.println("Input Error!!\nNo such operation!!");
+						System.exit(0);
+					}
 					ex.deri(cmdchar);
 					ex.merge();
+				}
+				else {
+					System.out.println("Input Error!!\nNo such operation!!");
 				}
 				ex.show();
 			}
 			// get expression
 			else {
-				for (int i = 0; i < cmd.length(); i++) 
-				{
-					if(cmd.charAt(i) == '/')
-					{
-						System.out.println("Error!");
-						System.exit(0);
-					}
-					
+				if (!ex.init(cmd)) {
+					System.out.println("Input Error!!");
+					System.exit(0);
+					//continue;
 				}
-				ex.init(cmd);
 				ex.adjust();
 				// ex.show();
 				ex.merge();
