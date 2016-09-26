@@ -247,7 +247,7 @@ public class Main {
 	private static Scanner cin;
 
 	public static void main(String[] args) throws FileNotFoundException {
-		FileInputStream fis = new FileInputStream("in19.txt");
+		FileInputStream fis = new FileInputStream("ine19.txt");
 		System.setIn(fis);
 		cin = new Scanner(System.in);
 		String cmd;
